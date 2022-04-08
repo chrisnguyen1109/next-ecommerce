@@ -1,8 +1,46 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import AuthProvider from 'components/AuthProvider';
+import Layout from 'components/Layout';
+import { AppPropsWithLayout } from 'interfaces';
+import Head from 'next/head';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { store } from 'store/store';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: 0, refetchOnWindowFocus: false } },
+});
 
-export default MyApp
+const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
+    const AppLayout = Component.Layout ?? Layout;
+
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Provider store={store}>
+                <AuthProvider>
+                    <AppLayout>
+                        <Head>
+                            <title>Next Ecommerce</title>
+                            <meta
+                                name="description"
+                                content="E-commerce website with Next.js"
+                            />
+                            <meta
+                                name="viewport"
+                                content="initial-scale=1.0, width=device-width"
+                            />
+                        </Head>
+                        <Component {...pageProps} />
+                    </AppLayout>
+                    <ToastContainer />
+                </AuthProvider>
+            </Provider>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    );
+};
+
+export default MyApp;
