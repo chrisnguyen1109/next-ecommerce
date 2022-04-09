@@ -28,11 +28,14 @@ export const connectDB = async () => {
         return;
     }
 
-    if (
-        !process.env.DATABASE ||
-        !process.env.DATABASE_PASSWORD ||
-        !process.env.DATABASE_USERNAME
-    ) {
+    if (!process.env.DATABASE) {
+        if (
+            process.env.NODE_ENV === 'development' &&
+            (!process.env.DATABASE_PASSWORD || !process.env.DATABASE_USERNAME)
+        ) {
+            throw createHttpError(503, 'Connect database failed!');
+        }
+
         throw createHttpError(503, 'Connect database failed!');
     }
 
