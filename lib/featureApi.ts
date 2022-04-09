@@ -1,4 +1,6 @@
+import { FieldOfModel } from 'interfaces';
 import { Model, Document, Query, FilterQuery } from 'mongoose';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from './pagination';
 
 export class FeatureApi<T extends Document> {
     private query: Query<T[], T>;
@@ -39,7 +41,7 @@ export class FeatureApi<T extends Document> {
         return this.model.find(queryObject);
     }
 
-    search(fileds: (keyof T)[]): FeatureApi<T> {
+    search(fileds: FieldOfModel<T>[]): FeatureApi<T> {
         if (this.queryString.search && fileds.length > 0) {
             const searchField = fileds.map(field => ({
                 [field]: new RegExp(`${this.queryString.search.trim()}`, 'i'),
@@ -66,8 +68,8 @@ export class FeatureApi<T extends Document> {
     }
 
     paginate(): FeatureApi<T> {
-        const page = +this.queryString.page || 1;
-        const limit = +this.queryString.limit || 20;
+        const page = +this.queryString.page || DEFAULT_PAGE;
+        const limit = +this.queryString.limit || DEFAULT_LIMIT;
         const skip = (page - 1) * limit;
         this.query.skip(skip).limit(limit);
 

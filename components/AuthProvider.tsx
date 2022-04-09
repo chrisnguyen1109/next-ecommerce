@@ -28,7 +28,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 dispatch(setAuthReady());
             }
         })();
-    }, []);
+    }, [dispatch]);
 
     return <>{children}</>;
 };

@@ -12,6 +12,10 @@ export interface AppPropsWithLayout extends AppProps {
     Component: NextPageWithLayout;
 }
 
+export interface HasId {
+    _id: string;
+}
+
 export interface Pagination {
     records: number;
     total_records: number;
@@ -31,5 +35,7 @@ export type ApiResponse<T = any> = NextApiResponse<
 >;
 
 export type ApiRequest = NextApiRequest & {
-    user?: UserDB & { _id: string };
+    user?: UserDB & HasId;
 };
+
+export type FieldOfModel<T extends Document> = keyof Omit<T, keyof Document>;

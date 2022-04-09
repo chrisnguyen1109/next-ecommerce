@@ -52,6 +52,10 @@ const productSchema: Schema<ProductDocument, ProductModel> = new Schema(
             ref: 'Category',
             required: [true, 'Category must be required!'],
         },
+        isFeatured: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,
@@ -59,6 +63,7 @@ const productSchema: Schema<ProductDocument, ProductModel> = new Schema(
             transform(_doc, ret) {
                 delete ret.createdAt;
                 delete ret.updatedAt;
+                delete ret.isFeatured;
                 delete ret.__v;
                 return ret;
             },

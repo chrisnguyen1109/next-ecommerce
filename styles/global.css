@@ -1,0 +1,15 @@
+.border-white-image {
+    border: 1px solid #dee2e6 !important;
+}
+
+.object-fit-cover {
+    object-fit: cover !important;
+}
+
+img.image-active {
+    border-color: orangered !important;
+}
+
+.text-justify {
+    text-align: justify !important;
+}

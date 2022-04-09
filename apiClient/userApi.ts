@@ -1,6 +1,6 @@
 import { RegisterForm } from 'containers/register';
 import { SigninForm } from 'containers/signin';
-import { ServerResponse, UserResponse } from 'interfaces';
+import { UserResponse } from 'interfaces';
 import axiosClient, { AxiosRequestCustom } from './axiosClient';
 
 export const signin = (user: SigninForm): Promise<UserResponse> => {
@@ -19,7 +19,7 @@ export const register = (newUser: RegisterForm): Promise<UserResponse> => {
     });
 };
 
-export const logout = (): Promise<ServerResponse> => {
+export const logout = (): Promise<{ message: string }> => {
     const url = '/logout';
 
     return axiosClient.post(url);

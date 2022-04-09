@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { store } from 'store/store';
+import 'styles/global.css';
 
 const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: 0, refetchOnWindowFocus: false } },

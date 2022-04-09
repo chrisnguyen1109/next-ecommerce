@@ -72,7 +72,7 @@ const userSchema: Schema<UserDocument, UserModel> = new Schema(
         },
         avatar: {
             type: String,
-            default: 'img/user/default.jpg',
+            default: '/img/user/default.jpg',
         },
     },
     {

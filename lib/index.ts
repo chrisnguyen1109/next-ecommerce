@@ -4,3 +4,6 @@ export * from './setCookie';
 export * from './expireTime';
 export * from './checkAuth';
 export * from './featureApi';
+export * from './pagination';
+export * from './getFilterData';
+export * from './textCapitalize';
