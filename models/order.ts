@@ -73,6 +73,8 @@ const orderSchema: Schema<OrderDocument, OrderModel> = new Schema(
 );
 
 orderSchema.pre('save', async function (next) {
+    if (!this.isModified('cart')) return next();
+
     await Promise.all(
         this.cart.map(async ({ product, quantity }) => {
             const matchingProduct = await Product.findById(product);
