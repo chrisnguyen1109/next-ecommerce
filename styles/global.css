@@ -13,3 +13,14 @@ img.image-active {
 .text-justify {
     text-align: justify !important;
 }
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

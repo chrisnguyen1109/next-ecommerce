@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import {
     isAuthRoute,
     isProtectedApi,
-    PROTECTED_ROUTE,
+    isProtectedRoute,
 } from 'lib/protectedRoute';
 import { NextMiddleware, NextResponse } from 'next/server';
 
@@ -16,7 +16,7 @@ const authMiddleware: NextMiddleware = async req => {
                     url.pathname.replace('/api/v1', ''),
                     req.method
                 )) ||
-            PROTECTED_ROUTE.includes(url.pathname) ||
+            isProtectedRoute(url.pathname) ||
             isAuthRoute(url.pathname)
         ) {
             if (!req.cookies['access-token']) {
@@ -42,7 +42,7 @@ const authMiddleware: NextMiddleware = async req => {
             });
         }
 
-        if (PROTECTED_ROUTE.includes(url.pathname)) {
+        if (isProtectedRoute(url.pathname)) {
             return NextResponse.redirect(new URL('/signin', req.url));
         }
 

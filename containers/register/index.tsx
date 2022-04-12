@@ -1,7 +1,7 @@
-import { register } from 'apiClient';
+import { registerApi } from 'apiClient';
 import FormInput from 'components/FormInput';
 import { Form, Formik } from 'formik';
-import { User } from 'interfaces';
+import { UserC } from 'interfaces';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, Spinner } from 'react-bootstrap';
@@ -10,7 +10,7 @@ import { loginUser } from 'store/authSlice';
 import { useAppDispatch } from 'store/hooks';
 import * as Yup from 'yup';
 
-export type RegisterForm = Pick<User, 'name' | 'email'> & {
+export type RegisterForm = Pick<UserC, 'name' | 'email'> & {
     password: string;
     confirmPassword: string;
 };
@@ -18,9 +18,9 @@ export type RegisterForm = Pick<User, 'name' | 'email'> & {
 const Register: React.FC = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const { mutate, isLoading } = useMutation(register, {
+    const { mutate, isLoading } = useMutation(registerApi, {
         onSuccess: data => {
-            if (data.message === 'Success') {
+            if (data.message === 'Success' && data.data?.user) {
                 dispatch(loginUser(data.data.user));
                 router.replace('/');
             }

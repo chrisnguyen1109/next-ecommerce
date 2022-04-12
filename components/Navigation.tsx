@@ -1,9 +1,8 @@
-import { logout } from 'apiClient';
-import { PROTECTED_ROUTE } from 'lib/protectedRoute';
+import { logoutApi } from 'apiClient';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-    Badge,
     Container,
     Image,
     Nav,
@@ -11,24 +10,22 @@ import {
     NavDropdown,
     Placeholder,
 } from 'react-bootstrap';
-import { AiOutlineShoppingCart, AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineUser } from 'react-icons/ai';
 import { useMutation } from 'react-query';
 import { authCurrentUser, authIsAuthReady, logoutUser } from 'store/authSlice';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+
+const CartIcon = dynamic(() => import('./CartIcon'), { ssr: false });
 
 const Navigation: React.FC = () => {
     const router = useRouter();
     const pathname = router.pathname;
     const dispatch = useAppDispatch();
     const isAuthReady = useAppSelector(authIsAuthReady);
-    const { mutate, isLoading } = useMutation(logout, {
+    const { mutate, isLoading } = useMutation(logoutApi, {
         onSuccess: data => {
             if (data.message === 'Success') {
                 dispatch(logoutUser());
-
-                if (PROTECTED_ROUTE.includes(pathname)) {
-                    router.replace('/signin');
-                }
             }
         },
     });
@@ -45,22 +42,7 @@ const Navigation: React.FC = () => {
                     <Navbar.Brand>Next Ecommerce</Navbar.Brand>
                 </Link>
                 <Nav className="align-items-center">
-                    <Link href="/cart" passHref>
-                        <Nav.Link className="d-flex align-items-center gap-1">
-                            <div className="d-flex position-relative">
-                                <AiOutlineShoppingCart size="20" />
-                                <Badge
-                                    bg="success"
-                                    pill
-                                    className="position-absolute top-0 start-100 translate-middle"
-                                    style={{ opacity: 0.8 }}
-                                >
-                                    0
-                                </Badge>
-                            </div>
-                            Cart
-                        </Nav.Link>
-                    </Link>
+                    <CartIcon />
                     {!userSession &&
                         (isAuthReady ? (
                             <Link href="/signin" passHref>

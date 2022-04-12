@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import { ApiResponse } from 'interfaces';
 import { NextApiHandler, NextApiRequest } from 'next';
+import { setCookie } from './setCookie';
 
 export const catchAsync =
     (handler: NextApiHandler) => (req: NextApiRequest, res: ApiResponse) => {
@@ -18,6 +19,12 @@ export const catchAsync =
                     console.log('-------------------------');
                     console.error(error);
                     console.log('-------------------------');
+                }
+
+                if (statusCode === 401) {
+                    setCookie(req, res, 'access-token', null, {
+                        expires: new Date(0),
+                    });
                 }
 
                 return res.status(statusCode).json({ message });

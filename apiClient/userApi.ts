@@ -1,9 +1,9 @@
 import { RegisterForm } from 'containers/register';
 import { SigninForm } from 'containers/signin';
-import { UserResponse } from 'interfaces';
+import { AuthResponse } from 'interfaces';
 import axiosClient, { AxiosRequestCustom } from './axiosClient';
 
-export const signin = (user: SigninForm): Promise<UserResponse> => {
+export const signinApi = (user: SigninForm): Promise<AuthResponse> => {
     const url = '/signin';
 
     return axiosClient.post(url, {
@@ -11,7 +11,7 @@ export const signin = (user: SigninForm): Promise<UserResponse> => {
     });
 };
 
-export const register = (newUser: RegisterForm): Promise<UserResponse> => {
+export const registerApi = (newUser: RegisterForm): Promise<AuthResponse> => {
     const url = '/register';
 
     return axiosClient.post(url, {
@@ -19,16 +19,18 @@ export const register = (newUser: RegisterForm): Promise<UserResponse> => {
     });
 };
 
-export const logout = (): Promise<{ message: string }> => {
+export const logoutApi = (): Promise<{ message: string }> => {
     const url = '/logout';
 
     return axiosClient.post(url);
 };
 
-export const getMe = (): Promise<UserResponse> => {
+export const getMeApi = ({
+    notShowError,
+}: { notShowError?: boolean } = {}): Promise<AuthResponse> => {
     const url = '/user/me';
 
     return axiosClient.get(url, {
-        notShowError: true,
+        notShowError,
     } as AxiosRequestCustom);
 };

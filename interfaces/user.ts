@@ -1,10 +1,11 @@
+import { HasId, ResponseData, TimeStamp } from './common';
+
 export enum UserRole {
     USER = 'user',
     ADMIN = 'admin',
 }
 
-export interface User {
-    _id: string;
+export interface UserC extends HasId, TimeStamp {
     name: string;
     email: string;
     role?: UserRole;
@@ -20,9 +21,4 @@ export interface UserDB {
     avatar: string;
 }
 
-export interface UserResponse {
-    message: string;
-    data: {
-        user: User;
-    };
-}
+export type AuthResponse = ResponseData<{ user: UserC }>;

@@ -8,6 +8,10 @@ import { getCookie } from './setCookie';
 export const checkAuth = async (req: ApiRequest, res: ApiResponse) => {
     const accessToken = getCookie(req, res, 'access-token');
 
+    if (!accessToken) {
+        throw createHttpError(401, 'Auth required!');
+    }
+
     const decodeAsync = promisify(jwt.verify) as any;
 
     const token = await decodeAsync(accessToken, process.env.SECRET_KEY);

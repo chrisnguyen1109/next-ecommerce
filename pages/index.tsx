@@ -1,4 +1,4 @@
-import ProductList from 'containers/product';
+import FeaturedProducts from 'containers/product';
 import { ProductC } from 'interfaces';
 import { connectDB, getFilterData } from 'lib';
 import { Product } from 'models';
@@ -15,7 +15,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredProducts }) => {
             <Head>
                 <title>Ecommerce Website</title>
             </Head>
-            <ProductList products={featuredProducts} />
+            <FeaturedProducts products={featuredProducts} />
         </>
     );
 };

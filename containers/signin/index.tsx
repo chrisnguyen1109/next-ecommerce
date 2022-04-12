@@ -1,7 +1,7 @@
-import { signin } from 'apiClient';
+import { signinApi } from 'apiClient';
 import FormInput from 'components/FormInput';
 import { Form, Formik } from 'formik';
-import { User } from 'interfaces';
+import { UserC } from 'interfaces';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, Spinner } from 'react-bootstrap';
@@ -10,16 +10,16 @@ import { loginUser } from 'store/authSlice';
 import { useAppDispatch } from 'store/hooks';
 import * as Yup from 'yup';
 
-export type SigninForm = Pick<User, 'email'> & {
+export type SigninForm = Pick<UserC, 'email'> & {
     password: string;
 };
 
 const Signin: React.FC = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const { mutate, isLoading } = useMutation(signin, {
+    const { mutate, isLoading } = useMutation(signinApi, {
         onSuccess: data => {
-            if (data.message === 'Success') {
+            if (data.message === 'Success' && data.data?.user) {
                 dispatch(loginUser(data.data.user));
                 router.replace('/');
             }

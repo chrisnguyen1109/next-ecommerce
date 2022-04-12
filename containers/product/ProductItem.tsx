@@ -1,7 +1,21 @@
 import { ProductC } from 'interfaces';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Placeholder } from 'react-bootstrap';
+import { addItem, cartCart } from 'store/cartSlice';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+
+const DynamicBtn = dynamic(() => import('components/DynamicBtn'), {
+    ssr: false,
+    loading: () => (
+        <Placeholder.Button
+            variant="success"
+            animation="glow"
+            className="w-50"
+        />
+    ),
+});
 
 interface ProductItemProps {
     product: ProductC;
@@ -9,7 +23,11 @@ interface ProductItemProps {
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, index }) => {
-    const { title, price, inStock, description, imageCover, slug } = product;
+    const { _id, title, price, inStock, description, imageCover, slug } =
+        product;
+    const dispatch = useAppDispatch();
+    const cart = useAppSelector(cartCart);
+    const itemExist = !!cart.find(el => el._id === _id);
 
     const productStock = () => {
         return inStock > 0 ? (
@@ -17,6 +35,12 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, index }) => {
         ) : (
             <h5 className="text-danger">Out of Stock</h5>
         );
+    };
+
+    const addToCart = () => {
+        if (itemExist || inStock === 0) return;
+
+        dispatch(addItem(product));
     };
 
     return (
@@ -46,9 +70,12 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, index }) => {
                             View
                         </Button>
                     </Link>
-                    <Button className="w-50" variant="success">
-                        Buy
-                    </Button>
+
+                    <DynamicBtn
+                        handleClick={addToCart}
+                        disableCondition={itemExist || !inStock}
+                        content={itemExist ? 'Added to cart' : 'Buy'}
+                    />
                 </div>
             </Card.Body>
         </Card>

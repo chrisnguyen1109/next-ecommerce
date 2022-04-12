@@ -20,11 +20,10 @@ const ImageSlide: React.FC<ImageSlideProps> = ({
             {slideImages.map((img, index) => (
                 <div
                     key={img}
-                    className="position-relative mx-0"
+                    className="position-relative mx-0 cursor-pointer"
                     style={{
                         height: '80px',
                         width: '20%',
-                        cursor: 'pointer',
                     }}
                     onClick={() => setImageActive(index)}
                 >

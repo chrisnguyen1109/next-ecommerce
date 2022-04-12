@@ -1,4 +1,4 @@
-export const PROTECTED_ROUTE = ['/profile'];
+const PROTECTED_ROUTE = ['/profile', /^\/order\/\w/];
 
 export const isAuthRoute = (path: string) =>
     path === '/signin' || path === '/register';
@@ -29,6 +29,12 @@ const PROTECTED_API = [
         path: /^\/product\/\w/,
     },
 ];
+
+export const isProtectedRoute = (path: string) => {
+    return !!PROTECTED_ROUTE.find(route =>
+        route instanceof RegExp ? route.test(path) : route === path
+    );
+};
 
 export const isProtectedApi = (path: string, method: string) => {
     return !!PROTECTED_API.find(api => {

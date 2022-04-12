@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AuthProvider from 'components/AuthProvider';
+import GlobalStateProvider from 'components/GobalStateProvider';
 import Layout from 'components/Layout';
 import { AppPropsWithLayout } from 'interfaces';
 import Head from 'next/head';
@@ -21,7 +21,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     return (
         <QueryClientProvider client={queryClient}>
             <Provider store={store}>
-                <AuthProvider>
+                <GlobalStateProvider>
                     <AppLayout>
                         <Head>
                             <title>Next Ecommerce</title>
@@ -37,7 +37,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
                         <Component {...pageProps} />
                     </AppLayout>
                     <ToastContainer />
-                </AuthProvider>
+                </GlobalStateProvider>
             </Provider>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

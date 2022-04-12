@@ -7,3 +7,4 @@ export * from './featureApi';
 export * from './pagination';
 export * from './getFilterData';
 export * from './textCapitalize';
+export * from './formatMobile';

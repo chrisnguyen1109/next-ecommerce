@@ -16,6 +16,11 @@ export interface HasId {
     _id: string;
 }
 
+export interface TimeStamp {
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export interface Pagination {
     records: number;
     total_records: number;
@@ -39,3 +44,16 @@ export type ApiRequest = NextApiRequest & {
 };
 
 export type FieldOfModel<T extends Document> = keyof Omit<T, keyof Document>;
+
+export type CallBack<T extends any[] = any> = (...args: T) => void;
+
+export interface ResponseData<T = any> {
+    message: string;
+    data?: T extends HasId[]
+        ? { records: T; pagination: Pagination }
+        : T extends HasId
+        ? { record: T }
+        : T;
+}
+
+export type DataCreate<T> = Omit<T, keyof TimeStamp | '_id'>;

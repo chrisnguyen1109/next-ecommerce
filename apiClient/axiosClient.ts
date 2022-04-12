@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
+import { logoutUser } from 'store/authSlice';
+import { store } from 'store/store';
 
 export interface AxiosRequestCustom extends AxiosRequestConfig {
     notShowError?: boolean;
@@ -38,6 +40,10 @@ axiosClient.interceptors.response.use(
             }
 
             toast.error(errorMessage || 'Something went wrong!');
+        }
+
+        if (error.response.status === 401) {
+            store.dispatch(logoutUser());
         }
 
         throw error;
