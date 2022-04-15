@@ -43,7 +43,7 @@ const AllProducts: React.FC<AllProductsProps> = ({ products, categories }) => {
     }, [filter]);
 
     return (
-        <>
+        <div className="mb-5">
             <FilterForm
                 categories={categories}
                 filter={filter}
@@ -59,7 +59,7 @@ const AllProducts: React.FC<AllProductsProps> = ({ products, categories }) => {
                     <LoadingSpinner />
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
