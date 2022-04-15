@@ -1,5 +1,5 @@
 import { OrderC } from 'interfaces';
-import { formatMobile } from 'lib';
+import { formatDate, formatMobile } from 'lib';
 import { Alert } from 'react-bootstrap';
 import OrderItems from './OrderItems';
 
@@ -41,8 +41,7 @@ const OrderInfor: React.FC<OrderInforProps> = ({ order }) => {
                     <Alert variant="danger">Not paid</Alert>
                 ) : (
                     <Alert variant="success">
-                        Paid on{' '}
-                        {new Date(paymentDate!).toISOString().split('T')[0]}
+                        Paid on {formatDate(paymentDate!)}
                     </Alert>
                 )}
             </div>

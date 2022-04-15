@@ -1,12 +1,16 @@
-import { ProductC } from 'interfaces';
+import { CallBack, ProductC } from 'interfaces';
 import { Col, Row } from 'react-bootstrap';
 import ProductItem from './ProductItem';
 
 interface ProductListProps {
     products: ProductC[];
+    infiniteScrollRef?: CallBack;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
+const ProductList: React.FC<ProductListProps> = ({
+    products,
+    infiniteScrollRef,
+}) => {
     return (
         <>
             {products.length === 0 && (
@@ -20,6 +24,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                         <Col
                             key={product._id}
                             className="d-flex justify-content-center"
+                            ref={
+                                products.length === index + 1 &&
+                                infiniteScrollRef
+                                    ? infiniteScrollRef
+                                    : undefined
+                            }
                         >
                             <ProductItem product={product} index={index} />
                         </Col>

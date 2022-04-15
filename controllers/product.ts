@@ -11,7 +11,7 @@ export const getProducts = async (
         Product,
         req.query,
         'title',
-        'content'
+        'description'
     );
 
     return res.status(200).json({

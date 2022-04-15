@@ -62,9 +62,6 @@ const orderSchema: Schema<OrderDocument, OrderModel> = new Schema(
         timestamps: true,
         toJSON: {
             transform(_doc, ret) {
-                delete ret.createdAt;
-                delete ret.updatedAt;
-                delete ret.isFeatured;
                 delete ret.__v;
                 return ret;
             },
@@ -73,7 +70,7 @@ const orderSchema: Schema<OrderDocument, OrderModel> = new Schema(
 );
 
 orderSchema.pre('save', async function (next) {
-    if (!this.isModified('cart')) return next();
+    if (!this.isNew) return next();
 
     await Promise.all(
         this.cart.map(async ({ product, quantity }) => {

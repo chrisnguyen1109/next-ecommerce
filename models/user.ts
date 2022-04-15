@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
 import createHttpError from 'http-errors';
-import { UserDB, UserRole } from 'interfaces';
+import { HasId, UserDB, UserRole } from 'interfaces';
 import jwt from 'jsonwebtoken';
 import { DAY_EXPIRE } from 'lib';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { promisify } from 'util';
 
-interface UserDocument extends UserDB, Document {
+export interface UserDocument extends UserDB, Document {
     comparePassword: (
         password: string,
         userPassword: string
@@ -19,6 +19,12 @@ interface UserModel extends Model<UserDocument> {
         email: string,
         password: string
     ) => Promise<UserDocument>;
+    findMyOrders: (id: string) => Promise<UserDocument>;
+    updatePassword: (
+        id: string,
+        password: string,
+        newPassword: string
+    ) => Promise<void>;
 }
 
 const trimmedString = { type: String, trim: true };
@@ -78,17 +84,24 @@ const userSchema: Schema<UserDocument, UserModel> = new Schema(
     {
         timestamps: true,
         toJSON: {
+            virtuals: true,
             transform(_doc, ret) {
                 delete ret.password;
                 delete ret.confirmPassword;
-                delete ret.createdAt;
-                delete ret.updatedAt;
                 delete ret.__v;
                 return ret;
             },
         },
+        toObject: { virtuals: true },
+        id: false,
     }
 );
+
+userSchema.virtual('orders', {
+    ref: 'Order',
+    foreignField: 'user',
+    localField: '_id',
+});
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
@@ -99,6 +112,19 @@ userSchema.pre('save', async function (next) {
 
     next();
 });
+
+userSchema.statics.findMyOrders = async function (id: string) {
+    const user = await this.findById(id).populate({
+        path: 'orders',
+        select: '-user -cart.product address mobile total delivery paid paymentDate',
+    });
+
+    if (!user) {
+        throw createHttpError(400, `No user with this id: ${id}`);
+    }
+
+    return user;
+};
 
 userSchema.statics.findByCredentials = async function (
     email: string,
@@ -115,6 +141,28 @@ userSchema.statics.findByCredentials = async function (
     }
 
     return user;
+};
+
+userSchema.statics.updatePassword = async function (
+    id: string,
+    password: string,
+    newPassword: string
+) {
+    const user = await this.findById(id).select('+password');
+    if (!user) {
+        throw createHttpError(400, 'Invalid email!');
+    }
+
+    const comparePassword = await user.comparePassword(password, user.password);
+
+    if (!comparePassword) {
+        throw createHttpError(400, 'Wrong password!');
+    }
+
+    user.password = newPassword;
+    user.confirmPassword = newPassword;
+
+    await user.save();
 };
 
 userSchema.methods.comparePassword = (

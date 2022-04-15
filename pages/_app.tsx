@@ -10,6 +10,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { store } from 'store/store';
 import 'styles/global.css';
+import 'nprogress/nprogress.css';
+import { Router } from 'next/router';
+import NProgress from 'nprogress';
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: 0, refetchOnWindowFocus: false } },
@@ -36,8 +43,8 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
                         </Head>
                         <Component {...pageProps} />
                     </AppLayout>
-                    <ToastContainer />
                 </GlobalStateProvider>
+                <ToastContainer />
             </Provider>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

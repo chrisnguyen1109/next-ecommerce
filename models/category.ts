@@ -20,8 +20,6 @@ const categorySchema: Schema<CategoryDocument, CategoryModel> = new Schema(
         toJSON: {
             virtuals: true,
             transform(_doc, ret) {
-                delete ret.createdAt;
-                delete ret.updatedAt;
                 delete ret.__v;
                 return ret;
             },

@@ -54,7 +54,7 @@ const Register: React.FC = () => {
                 [Yup.ref('password'), ''],
                 'Confirm passwords must match to password'
             )
-            .required('Required'),
+            .required('Confirm password is required'),
     });
 
     const onSubmit = (data: RegisterForm) => {

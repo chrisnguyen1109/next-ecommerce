@@ -1,3 +1,4 @@
+import LoadingSpinner from 'components/LoadingSpinner';
 import PaypalButton from 'components/PaypalButton';
 import { useOrder } from 'hooks';
 import { useRouter } from 'next/router';
@@ -25,22 +26,8 @@ const OrderDetail: React.FC = () => {
                 </Button>
             </div>
             {isLoading && (
-                <div className="my-5 w-100 text-center">
-                    <Spinner
-                        animation="grow"
-                        variant="secondary"
-                        className="mx-3"
-                    />
-                    <Spinner
-                        animation="grow"
-                        variant="secondary"
-                        className="mx-3"
-                    />
-                    <Spinner
-                        animation="grow"
-                        variant="secondary"
-                        className="mx-3"
-                    />
+                <div className="my-5 w-100">
+                    <LoadingSpinner />
                 </div>
             )}
             {id && !isLoading && !data?.data?.record && (

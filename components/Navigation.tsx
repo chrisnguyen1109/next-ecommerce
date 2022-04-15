@@ -62,7 +62,7 @@ const Navigation: React.FC = () => {
                         <div className="d-flex align-items-center ms-2">
                             <Image
                                 src={userSession.avatar}
-                                alt="avatr"
+                                alt="avatar"
                                 roundedCircle
                                 width={30}
                                 height={30}

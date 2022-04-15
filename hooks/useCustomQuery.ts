@@ -92,19 +92,17 @@ const initialCustomQuery = <
                 onError: error => {
                     onError?.(error);
                 },
-                onSuccess: (response: Y) => {
+                onSuccess: (response: Y, variables) => {
                     if (
                         response.message === 'Success' &&
                         response.data?.record
                     ) {
                         onSuccess?.(response);
+                        queryClient.invalidateQueries([
+                            feature.queryKey,
+                            variables.id,
+                        ]);
                     }
-                },
-                onSettled: (_data, _error, variables) => {
-                    queryClient.invalidateQueries([
-                        feature.queryKey,
-                        variables.id,
-                    ]);
                 },
             }
         );

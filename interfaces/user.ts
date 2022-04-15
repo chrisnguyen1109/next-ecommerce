@@ -1,4 +1,5 @@
 import { HasId, ResponseData, TimeStamp } from './common';
+import { OrderC } from './order';
 
 export enum UserRole {
     USER = 'user',
@@ -10,6 +11,7 @@ export interface UserC extends HasId, TimeStamp {
     email: string;
     role?: UserRole;
     avatar?: string;
+    orders?: Omit<OrderC, 'paymentId' | 'cart' | 'user'>[];
 }
 
 export interface UserDB {

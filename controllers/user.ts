@@ -62,10 +62,44 @@ export const logout = async (req: ApiRequest, res: ApiResponse) => {
 export const getMe = async (req: ApiRequest, res: ApiResponse) => {
     await checkAuth(req, res);
 
+    const user =
+        req.query.orders === 'true'
+            ? await User.findMyOrders(req.user?._id!)
+            : req.user;
+
     return res.status(200).json({
         message: 'Success',
         data: {
-            user: req.user,
+            user,
+        },
+    });
+};
+
+export const updateMe = async (req: ApiRequest, res: ApiResponse) => {
+    await checkAuth(req, res);
+
+    const { password, newPassword, ...rest } = req.body;
+
+    const updateUser = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            ...rest,
+        },
+        { new: true }
+    );
+
+    if (!updateUser) {
+        throw createHttpError(404, `No user with this id: ${req.user?._id}`);
+    }
+
+    if (newPassword && password) {
+        await User.updatePassword(req.user!._id, password, newPassword);
+    }
+
+    return res.status(200).json({
+        message: 'Success',
+        data: {
+            user: updateUser,
         },
     });
 };

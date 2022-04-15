@@ -3,6 +3,7 @@ import { AppProps } from 'next/app';
 import React, { ReactNode } from 'react';
 import { UserDB } from './user';
 import { Document } from 'mongoose';
+import { UserDocument } from 'models';
 
 export type NextPageWithLayout<T = {}> = NextPage<T> & {
     Layout?: React.FC<{ children: ReactNode }>;
@@ -40,12 +41,12 @@ export type ApiResponse<T = any> = NextApiResponse<
 >;
 
 export type ApiRequest = NextApiRequest & {
-    user?: UserDB & HasId;
+    user?: UserDocument & HasId;
 };
 
 export type FieldOfModel<T extends Document> = keyof Omit<T, keyof Document>;
 
-export type CallBack<T extends any[] = any> = (...args: T) => void;
+export type CallBack<T = any> = (args?: T) => void;
 
 export interface ResponseData<T = any> {
     message: string;
@@ -57,3 +58,9 @@ export interface ResponseData<T = any> {
 }
 
 export type DataCreate<T> = Omit<T, keyof TimeStamp | '_id'>;
+
+export interface QueryParms<T extends string> {
+    page: number;
+    limit: number;
+    sort: `${'-' | ''}${T}`;
+}

@@ -1,21 +1,17 @@
-import { getMeApi } from 'apiClient';
 import { NextPage } from 'next';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+
+const Profile = dynamic(() => import('containers/profile'));
 
 const ProfilePage: NextPage = () => {
-    const getMeHandler = async () => {
-        try {
-            const response = await getMeApi();
-            console.log(response);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     return (
-        <div>
-            ProfilePage
-            <button onClick={getMeHandler}>Get me</button>
-        </div>
+        <>
+            <Head>
+                <title>Your profile</title>
+            </Head>
+            <Profile />
+        </>
     );
 };
 

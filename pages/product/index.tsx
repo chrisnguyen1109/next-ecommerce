@@ -1,35 +1,41 @@
-import ProductList from 'containers/product/ProductList';
-import { ProductC } from 'interfaces';
+import AllProducts from 'containers/product/AllProducts';
+import { CategoryC, ProductC } from 'interfaces';
 import { connectDB, getFilterData } from 'lib';
-import { Product } from 'models';
-import { GetStaticProps, NextPage } from 'next';
+import { Category, Product } from 'models';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
 interface ProductPageProps {
     products: ProductC[];
+    categories: CategoryC[];
 }
 
-const ProductPage: NextPage<ProductPageProps> = ({ products }) => {
+const ProductPage: NextPage<ProductPageProps> = ({ products, categories }) => {
     return (
         <>
             <Head>
-                <title>Ecommerce Website</title>
+                <title>All Products</title>
             </Head>
-            <ProductList products={products} />
+            <AllProducts products={products} categories={categories} />
         </>
     );
 };
 
-export const getStaticProps: GetStaticProps<ProductPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<
+    ProductPageProps
+> = async ctx => {
     await connectDB();
 
-    const data = await getFilterData(Product, {});
+    const [data, categories] = await Promise.all([
+        getFilterData(Product, { ...ctx.query }, 'title', 'description'),
+        Category.find(),
+    ]);
 
     return {
         props: {
             products: JSON.parse(JSON.stringify(data.records)),
+            categories: JSON.parse(JSON.stringify(categories)),
         },
-        revalidate: 60 * 60,
     };
 };
 

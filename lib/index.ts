@@ -8,3 +8,4 @@ export * from './pagination';
 export * from './getFilterData';
 export * from './textCapitalize';
 export * from './formatMobile';
+export * from './formatDate';

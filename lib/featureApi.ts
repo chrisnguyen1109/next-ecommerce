@@ -4,15 +4,19 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from './pagination';
 
 export class FeatureApi<T extends Document> {
     private query: Query<T[], T>;
+    private queryCount: Query<number, any>;
 
     constructor(
         private model: Model<T>,
         private queryString: Record<string, any>
     ) {
-        this.query = this.filter();
+        const queryObject = this.filterQuery();
+
+        this.query = this.model.find(queryObject);
+        this.queryCount = this.model.countDocuments(queryObject);
     }
 
-    private filter() {
+    private filterQuery(): FilterQuery<T> {
         const excludeFields = ['page', 'sort', 'limit', 'fields', 'search'];
         const queryObject = excludeFields.reduce(
             (prev, current) => {
@@ -38,7 +42,7 @@ export class FeatureApi<T extends Document> {
             }
         }
 
-        return this.model.find(queryObject);
+        return queryObject;
     }
 
     search(fileds: FieldOfModel<T>[]): FeatureApi<T> {
@@ -48,6 +52,7 @@ export class FeatureApi<T extends Document> {
             })) as FilterQuery<T>[];
 
             this.query.or(searchField);
+            this.queryCount.or(searchField);
         }
 
         return this;
@@ -74,6 +79,10 @@ export class FeatureApi<T extends Document> {
         this.query.skip(skip).limit(limit);
 
         return this;
+    }
+
+    count() {
+        return this.queryCount;
     }
 
     execute() {

@@ -1,4 +1,3 @@
-import { getMe, updateMe } from 'controllers';
 import createHttpError from 'http-errors';
 import { catchAsync, connectDB } from 'lib';
 import { NextApiHandler } from 'next';
@@ -9,10 +8,13 @@ const handler: NextApiHandler = async (req, res) => {
     await connectDB();
 
     switch (method) {
-        case 'GET':
-            return getMe(req, res);
-        case 'PUT':
-            return updateMe(req, res);
+        case 'POST':
+            console.log(123);
+            res.status(200).json({
+                message: 'Success',
+            });
+
+            break;
         default:
             throw createHttpError(405, 'Method not allowed!');
     }

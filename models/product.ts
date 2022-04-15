@@ -61,8 +61,6 @@ const productSchema: Schema<ProductDocument, ProductModel> = new Schema(
         timestamps: true,
         toJSON: {
             transform(_doc, ret) {
-                delete ret.createdAt;
-                delete ret.updatedAt;
                 delete ret.isFeatured;
                 delete ret.__v;
                 return ret;
@@ -71,7 +69,7 @@ const productSchema: Schema<ProductDocument, ProductModel> = new Schema(
     }
 );
 
-productSchema.index({ slug: 1 });
+productSchema.index({ slug: 1 }, { unique: true });
 
 productSchema.pre('save', function (next) {
     this.slug = slugify(this.title, { lower: true });
