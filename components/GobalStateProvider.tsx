@@ -1,6 +1,6 @@
 import { isProtectedRoute } from 'lib/protectedRoute';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { initialAuthApp } from 'store/authActions';
 import { authCurrentUser, authIsAuthReady } from 'store/authSlice';
 import { cartCart, cartTotalPrice } from 'store/cartSlice';
@@ -14,7 +14,6 @@ const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     children,
 }) => {
     const dispatch = useAppDispatch();
-    const firstRender = useRef<boolean>(false);
     const cart = useAppSelector(cartCart);
     const totalPrice = useAppSelector(cartTotalPrice);
     const router = useRouter();
@@ -23,10 +22,6 @@ const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     const currentUser = useAppSelector(authCurrentUser);
 
     useEffect(() => {
-        if (firstRender.current) return;
-
-        firstRender.current = true;
-
         dispatch(initialAuthApp());
     }, [dispatch]);
 

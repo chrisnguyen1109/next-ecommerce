@@ -32,7 +32,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
     };
 
     useDebouncedEffect(() => {
-        setFilter(prev => ({ ...prev, search: searchInput }));
+        searchInput && setFilter(prev => ({ ...prev, search: searchInput }));
     }, [searchInput]);
 
     return (

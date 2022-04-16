@@ -5,7 +5,7 @@ import {
     fetchList,
     updateItem,
 } from 'apiClient';
-import { DataCreate, HasId, ResponseData, TimeStamp } from 'interfaces';
+import { DataCreate, HasId, ResponseData } from 'interfaces';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 export interface Feature {
@@ -46,12 +46,17 @@ const initialCustomQuery = <
         );
     };
 
-    const useList = (payload: T) => {
-        return useQuery<Z>([feature.queryKey, payload], () =>
-            fetchList<T, Z>({
-                payload,
-                service: feature.service,
-            })
+    const useList = (payload: T, enabled: boolean = true) => {
+        return useQuery<Z>(
+            [feature.queryKey, payload],
+            () =>
+                fetchList<T, Z>({
+                    payload,
+                    service: feature.service,
+                }),
+            {
+                enabled,
+            }
         );
     };
 

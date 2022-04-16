@@ -1,10 +1,15 @@
 import LoadingSpinner from 'components/LoadingSpinner';
-import { useInfiniteScroll, useProducts } from 'hooks';
+import {
+    useComponentDidUpdate,
+    useFirstRender,
+    useInfiniteScroll,
+    useProducts,
+} from 'hooks';
 import { CategoryC, ProductC, ProductQuery } from 'interfaces';
 import { DEFAULT_LIMIT } from 'lib';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FilterForm from './FilterForm';
 import ProductList from './ProductList';
 
@@ -15,10 +20,12 @@ interface AllProductsProps {
 
 const AllProducts: React.FC<AllProductsProps> = ({ products, categories }) => {
     const router = useRouter();
+
     const [filter, setFilter] = useState<ProductQuery>({
         ...router.query,
     });
-    const { data, isLoading } = useProducts(filter);
+    const firstFilterRef = useRef<boolean>(false);
+    const { data, isLoading } = useProducts(filter, firstFilterRef.current);
     const [productList, setProductList] = useState<ProductC[]>(products);
 
     const hasMore = data?.data?.pagination
@@ -36,10 +43,11 @@ const AllProducts: React.FC<AllProductsProps> = ({ products, categories }) => {
         data?.data?.records && setProductList(data?.data?.records);
     }, [data?.data?.records]);
 
-    useEffect(() => {
+    useComponentDidUpdate(() => {
         router.push(`/product?${queryString.stringify(filter)}`, undefined, {
             shallow: true,
         });
+        firstFilterRef.current = true;
     }, [filter]);
 
     return (
